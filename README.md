@@ -2,9 +2,10 @@
 
 The official implementation of the ICLR 2026 paper [$\nabla$-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Space](https://arxiv.org/abs/2603.04948).
 
-[Peihao Wang](https://peihaowang.github.io/)*, [Ruisi Cai](https://cairuisi.github.io/)*, [Zhen Wang](https://zhenwang9102.github.io/), [Hongyuan Mei](https://www.hongyuanmei.com/), [Qiang Liu](https://www.cs.utexas.edu/~lqiang/), [Pan Li](https://sites.google.com/view/panli-purdue/home), [Atlas Wang](https://vita-group.github.io/research.html)
+[Peihao Wang](https://peihaowang.github.io/)\*, [Ruisi Cai](https://cairuisi.github.io/)\*, [Zhen Wang](https://zhenwang9102.github.io/), [Hongyuan Mei](https://www.hongyuanmei.com/), [Qiang Liu](https://www.cs.utexas.edu/~lqiang/), [Pan Li](https://sites.google.com/view/panli-purdue/home), [Atlas Wang](https://vita-group.github.io/research.html)
 
-*International Conference on Learning Representations (ICLR), 2026*  
+*International Conference on Learning Representations (ICLR), 2026*
+
 \* denotes equal contribution.
 
 [Paper](https://arxiv.org/abs/2603.04948) | [Code](https://github.com/VITA-Group/Nabla-Reasoner)
@@ -29,14 +30,7 @@ pip install vllm==0.10.2
 
 ### Data
 
-Evaluation sets are adapted from [Spurious_Rewards](https://github.com/ruixin31/Spurious_Rewards/tree/main/code/data) and hosted at [peihaowang/math-reasoning-eval](https://huggingface.co/datasets/peihaowang/math-reasoning-eval).
-
-Built-in benchmarks:
-
-- `AMC`
-- `AIME-2024`
-- `AIME-2025`
-- `MATH-500`
+Evaluation sets are adapted from [Spurious_Rewards](https://github.com/ruixin31/Spurious_Rewards/tree/main/code/data) and hosted at [peihaowang/math-reasoning-eval](https://huggingface.co/datasets/peihaowang/math-reasoning-eval). Please download and place the datasets under directory `data`.
 
 ## Usage
 
@@ -163,7 +157,7 @@ If you find this repository useful, please cite:
 
 ```bibtex
 @inproceedings{wang2026nabla,
-  title={Nabla-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Textual Space},
+  title={$\nabla$-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Textual Space},
   author={Wang, Peihao and Cai, Ruisi and Wang, Zhen and Mei, Hongyuan and Liu, Qiang and Li, Pan and Wang, Atlas},
   booktitle={International Conference on Learning Representations},
   year={2026}
