@@ -1,6 +1,6 @@
 # $\nabla$-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Space
 
-The official implementation of the ICLR 2026 paper [$\nabla$-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Space](https://arxiv.org/abs/2603.04948).
+The official implementation of the ICLR 2026 paper [Nabla-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Space](https://arxiv.org/abs/2603.04948).
 
 [Peihao Wang](https://peihaowang.github.io/)\*, [Ruisi Cai](https://cairuisi.github.io/)\*, [Zhen Wang](https://zhenwang9102.github.io/), [Hongyuan Mei](https://www.hongyuanmei.com/), [Qiang Liu](https://www.cs.utexas.edu/~lqiang/), [Pan Li](https://sites.google.com/view/panli-purdue/home), [Atlas Wang](https://vita-group.github.io/research.html)
 
