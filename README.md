@@ -123,10 +123,10 @@ python run.py \
 
 ### Parallel Benchmark Run
 
-Use `multi_run.py` to process an entire benchmark in parallel across multiple workers/GPUs.
+Use `eval/multi_run.py` to process an entire benchmark in parallel across multiple workers/GPUs.
 
 ```bash
-python multi_run.py \
+python eval/multi_run.py \
   --lm_model_name <lm_model_path> \
   --rm_model_name <rm_model_path> \
   --vllm_url http://127.0.0.1:8000 \
@@ -146,7 +146,7 @@ python multi_run.py \
 After generation, compute benchmark metrics from `responses.json` using:
 
 ```bash
-python eval_outputs.py \
+python eval/eval_outputs.py \
   --json_path <output_dir>/responses.json \
   --output_file <output_dir>/eval.json
 ```

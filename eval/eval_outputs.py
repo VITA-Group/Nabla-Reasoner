@@ -8,7 +8,7 @@ import numpy as np
 from transformers import AutoTokenizer
 
 from ttrl.verifier.auto_verify import auto_verify
-import data
+from eval import data
 
 import pdb
 

@@ -1,17 +1,11 @@
 import argparse
 import json
 import os
-from typing import Optional, Tuple
+from typing import Optional
 
 import torch
 from transformers import AutoModelForCausalLM, AutoModelForSequenceClassification, AutoTokenizer
 
-from data import (
-    available_datasets,
-    read_labels_from_benchmark,
-    read_prompts_from_benchmark,
-    read_prompts_from_file,
-)
 from decoding import NablaDecoding
 from utils import seed_everything
 
@@ -74,26 +68,12 @@ def init_models(
 
 def resolve_prompt(args):
     if args.prompt is not None:
-        return args.prompt, args.label
+        return args.prompt
 
     if args.prompt_file is not None:
-        return open(args.prompt_file, "r", encoding="utf-8").read(), args.label
+        return open(args.prompt_file, "r", encoding="utf-8").read()
 
-    if args.prompt_ref is not None:
-        if ":" not in args.prompt_ref:
-            raise ValueError("--prompt_ref must be in '<dataset|file>:<index>' format.")
-        source, idx_str = args.prompt_ref.split(":", 1)
-        idx = int(idx_str)
-
-        if source.upper() in available_datasets():
-            prompts = read_prompts_from_benchmark(source.upper())
-            labels = read_labels_from_benchmark(source.upper())
-            return prompts[idx], labels[idx]
-
-        prompts = read_prompts_from_file(source)
-        return prompts[idx], args.label
-
-    raise ValueError("Provide one of --prompt, --prompt_file, or --prompt_ref.")
+    raise ValueError("Provide one of --prompt or --prompt_file.")
 
 
 def main():
@@ -110,8 +90,6 @@ def main():
 
     parser.add_argument("--prompt", type=str, default=None, help="Prompt text.")
     parser.add_argument("--prompt_file", type=str, default=None, help="Read prompt text from a file.")
-    parser.add_argument("--prompt_ref", type=str, default=None, help="Dataset/file ref in '<source>:<index>' format.")
-    parser.add_argument("--label", type=str, default=None, help="Optional label override.")
     parser.add_argument("--output_file", type=str, default=None, help="Optional JSON output path.")
 
     parser.add_argument("--attn_implementation", type=str, default="flash_attention_2", help="HF attention implementation.")
@@ -141,12 +119,12 @@ def main():
 
     args = parser.parse_args()
 
-    prompt_input_count = sum(x is not None for x in [args.prompt, args.prompt_file, args.prompt_ref])
+    prompt_input_count = sum(x is not None for x in [args.prompt, args.prompt_file])
     if prompt_input_count != 1:
-        raise ValueError("Provide exactly one of --prompt, --prompt_file, --prompt_ref.")
+        raise ValueError("Provide exactly one of --prompt or --prompt_file.")
 
     device = args.device or ("cuda:0" if torch.cuda.is_available() else "cpu")
-    prompt, label = resolve_prompt(args)
+    prompt = resolve_prompt(args)
 
     # Set `args.vllm_model_name` default to `args.lm_model_name` if not specified
     if args.vllm_model_name is None:
@@ -204,7 +182,6 @@ def main():
 
     result = {
         "prompt": prompt,
-        "label": label,
         "response": response,
         "stats": stats,
     }
@@ -212,8 +189,6 @@ def main():
     print(f"\n=== Response ===\n{response}\n", flush=True)
     print("=== Stats ===", flush=True)
     print(json.dumps(stats, ensure_ascii=False, indent=2), flush=True)
-    if label is not None:
-        print(f"Label: {label}", flush=True)
 
     if args.output_file:
         output_dir = os.path.dirname(args.output_file)

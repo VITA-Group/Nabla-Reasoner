@@ -19,7 +19,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSequen
 from templates import format_with_template
 from decoding import NablaDecoding
 
-from data import read_prompts_from_benchmark, read_labels_from_benchmark, available_datasets
+from eval.data import read_prompts_from_benchmark, read_labels_from_benchmark, available_datasets, read_prompts_from_file
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -90,10 +90,6 @@ def merge_jsons(per_proc_files, merged_path):
     avg_stats = {k: (sums[k] / counts[k]) for k in sums if counts[k] > 0}
     stats_path = os.path.join(os.path.dirname(merged_path), "generation_stats.json")
     write_json(stats_path, avg_stats)
-
-
-def is_torchrun():
-    return "RANK" in os.environ and "WORLD_SIZE" in os.environ
 
 
 def init_models(lm_model_name, rm_model_name, device, attn_impl="flash_attention_2", torch_dtype=torch.bfloat16):
@@ -301,8 +297,6 @@ def main():
     parser.add_argument("--output_name", type=str, default="responses", help="Base name for JSON outputs")
 
     args = parser.parse_args()
-    if args.n_samples < 1:
-        raise ValueError("--n_samples must be >= 1")
 
     # Set `args.vllm_model_name` default to `args.lm_model_name` if not specified
     if args.vllm_model_name is None:
@@ -313,16 +307,9 @@ def main():
         prompts = read_prompts_from_benchmark(args.prompts.upper())
         labels = read_labels_from_benchmark(args.prompts.upper())
     else:
-        from data import read_prompts_from_file
         prompts = read_prompts_from_file(args.prompts)
         labels = None
-
-    # Optionally restrict to the first N prompts for quick tests.
-    if args.max_prompts is not None and args.max_prompts > 0:
-        prompts = prompts[:args.max_prompts]
-        if labels is not None:
-            labels = labels[:args.max_prompts]
-        print(f"Using only the first {len(prompts)} prompts (max_prompts={args.max_prompts}).", flush=True)
+    
     if not prompts:
         print("No prompts found.", flush=True)
         sys.exit(1)
